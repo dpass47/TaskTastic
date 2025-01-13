@@ -1,0 +1,17 @@
+:root {
+	--color-background: #1a1a1a;
+	--color-accent: #bf94ea;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	font-weight: normal;
+}
+
+body {
+	background-color: var(--color-background);
+	color: white;
+}
