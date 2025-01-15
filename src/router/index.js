@@ -14,6 +14,16 @@ const router = createRouter({
 			name: 'settings',
 			component: () => import('../views/SettingsView.vue'),
 		},
+		{
+			path: '/calendar',
+			name: 'calendar',
+			component: () => import('../views/CalendarView.vue'),
+		},
+		{
+			path: '/completed',
+			name: 'completed',
+			component: () => import('../views/CompletedTasksView.vue'),
+		},
 	],
 });
 
