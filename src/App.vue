@@ -6,4 +6,9 @@ import { RouterView } from 'vue-router';
 	<RouterView />
 </template>
 
-<style scoped></style>
+<style>
+@font-face {
+	font-family: 'Inter';
+	src: url('assets/Inter.ttf');
+}
+</style>
