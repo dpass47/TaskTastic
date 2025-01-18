@@ -1,9 +1,25 @@
 <script setup>
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import Navbar from '../components/Navbar.vue';
+import TaskList from '@/components/TaskList.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
 
-const taskList = ref('');
+const newTask = ref('');
+const tasks = reactive(
+	localStorage.getItem('tasks')
+		? JSON.parse(localStorage.getItem('tasks'))
+		: []
+);
+
+function addTask() {
+	tasks.unshift({
+		id: Date.now(),
+		text: newTask.value,
+		completed: false,
+	});
+	localStorage.setItem('tasks', JSON.stringify(tasks));
+	newTask.value = '';
+}
 </script>
 
 <template>
@@ -13,13 +29,17 @@ const taskList = ref('');
 			<div class="new-task-container">
 				<input
 					type="text"
-					v-model="taskList"
+					v-model="newTask"
 					placeholder="Add a new task..."
-					class="new-task-input" />
-				<button class="new-task-button">
+					class="new-task-input"
+					@keyup.enter="newTask && addTask()" />
+				<button
+					class="new-task-button"
+					@click="addTask">
 					<PlusIcon class="icon" />
 				</button>
 			</div>
+			<TaskList :tasks="tasks" />
 		</div>
 	</main>
 </template>
@@ -45,7 +65,7 @@ const taskList = ref('');
 	outline: none;
 	color: #fff;
 	padding: 0.5em;
-	width: 90%;
+	width: 100%;
 	font-size: 1.2em;
 	margin-right: 0.5em;
 	caret-color: var(--color-accent);
