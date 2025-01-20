@@ -1,24 +1,49 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import TrashIcon from './icons/TrashIcon.vue';
 
 const props = defineProps({
 	tasks: Array,
 });
 
+const tasks = props.tasks;
+
+const uncompletedTasks = computed(() => {
+	return props.tasks.filter((t) => !t.completed);
+});
+
 const hoveredTask = ref(null);
+
+function completeTask(id) {
+	var selectedTask = tasks.findIndex((task) => task.id === id);
+	tasks[selectedTask].completed = !tasks[selectedTask].completed;
+	localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// function deleteTask() {}
 </script>
 
 <template>
 	<ul>
 		<li
-			v-for="task in props.tasks"
+			v-for="task in uncompletedTasks"
 			:key="task.id"
 			@mouseenter="hoveredTask = task"
 			@mouseleave="hoveredTask = null">
-			{{ task.text
-			}}<Transition name="delete-button-transition">
-				<button v-if="task === hoveredTask">X</button>
-			</Transition>
+			<div class="task-item">
+				<div class="task-content">
+					<input
+						type="checkbox"
+						@change="completeTask(task.id)" />
+					{{ task.text }}
+				</div>
+				<Transition name="delete-button-transition">
+					<button v-if="task === hoveredTask">
+						<TrashIcon class="icon" />
+					</button>
+				</Transition>
+			</div>
+			<hr />
 		</li>
 	</ul>
 </template>
@@ -31,23 +56,25 @@ ul {
 
 li {
 	list-style-type: none;
-	font-size: 1.2em;
-	margin-bottom: 0.5em;
 	cursor: default;
+}
+
+.task-item {
+	list-style-type: none;
+	font-size: 1.2em;
+	margin: 0.5em 0;
 	display: flex;
 	justify-content: space-between;
 }
 
-span {
-	border: 2px solid magenta;
+hr {
+	border-bottom: 1px solid #fff;
+	opacity: 0.1;
+	margin: 0 auto;
 }
 
 button {
-	margin-left: 0.75em;
-	border: 1px solid var(--color-accent);
-	border-radius: 50%;
-	height: 24px;
-	width: 24px;
+	border: none;
 	background: none;
 	outline: none;
 	color: #fff;
@@ -65,5 +92,11 @@ button:hover {
 .delete-button-transition-enter-from,
 .delete-button-transition-leave-to {
 	opacity: 0;
+}
+
+.icon {
+	color: var(--color-accent);
+	width: 16px;
+	height: 16px;
 }
 </style>
